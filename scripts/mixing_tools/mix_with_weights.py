@@ -4,7 +4,15 @@
 #mix with given mixing weights
 
 import argparse
+import librosa
 
+def load_args(filepath):
+    with open(filepath, 'r') as openfile:
+        reader = csv.reader(openfile, delimiter=',') 
+        args=[]
+        for line in reader:
+            args.append(line)
+    return args
 
 def main(args):
     pass
@@ -24,3 +32,5 @@ if __name__ == "__main__":
                         help="File name of output file")
 
     main(parser.parse_args())
+
+
