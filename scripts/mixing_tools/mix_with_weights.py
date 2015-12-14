@@ -5,14 +5,36 @@
 
 import argparse
 import librosa
+import csv
 
 def load_args(filepath):
     with open(filepath, 'r') as openfile:
         reader = csv.reader(openfile, delimiter=',') 
-        args=[]
+        filepaths = []
+        weights = []
         for line in reader:
-            args.append(line)
-    return args
+            filepaths.append(line[0])
+            weights.append(float(line[1]))
+    return filepaths, weights
+
+
+def create_mix(filepaths, weights):
+    all_weighted_audio = []
+    for fpath, w in zip(filepaths, weights):
+        print "loading file %s" % fpath
+        audio_data, sample_rate = librosa.load(fpath)
+        audio_weighted = w*(audio_data)
+        all_weighted_audio.append(audio_weighted)
+
+    mix = all_weighted_audio[0]
+    for weighted_audio in all_weighted_audio[1:]:
+        print "mixing file..."
+        mix = mix + weighted_audio
+
+    librosa.output.write_wav("/Users/rachelbittner/Desktop/test_mix.wav", mix, sample_rate)
+
+    return weighted_audio
+
 
 def main(args):
     pass
